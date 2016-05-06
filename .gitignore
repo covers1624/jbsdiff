@@ -1,27 +1,26 @@
-# Created by .ignore support plugin (hsz.mobi)
-### Java template
-*.class
+#Stolen form AE2 Repo. :D
+# exclude all
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+/*
 
-# Package Files #
-*.jar
-*.war
-*.ear
-.idea/
-*.iml
-target/
+# Include important folders
 
-# Output binaries
-/bin
+# Gradle stuff
+!gradle/
+!gradlew
+!gradlew.bat
+!build.gradle
+!build.properties
+!settings.gradle
 
-# IDE files
-/.project
-/.classpath
-/.settings
+# Other Files.
+!LICENSE.txt
+!README.md
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# Include git important files
+!.gitmodules
+!.gitignore
 
-
+# Include Important Folders
+!src/
+!libs/

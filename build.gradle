@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+apply plugin: 'java'
+apply plugin: 'idea'
+
+version = "1.0"
+group= "io.sigpipe.jbsdiff"
+
+repositories {
+    jcenter()
+}
+
+configurations {
+    compile
+}
+
+dependencies {
+    compile 'org.apache.commons:commons-compress:1.9'
+    compile fileTree(dir: 'libs', include: '*.jar')
+}
+
+idea {
+    module{
+        sourceDirs += file('src/main/java')
+        sourceDirs += file('src/main/resources')
+        sourceDirs += file('src/api/java')
+        sourceDirs += file('src/api/resources')
+        sourceDirs += file('src/tests/java')
+        sourceDirs += file('src/tests/resources')
+
+        scopes.PROVIDED.plus += [configurations.compile]
+        jdkName = '1.7.0_79'
+
+        downloadJavadoc = true
+        downloadSources = true
+
+    }
+}
+
+
+
