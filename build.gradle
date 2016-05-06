@@ -54,7 +54,7 @@ uploadArchives {
             pom {
                 groupId = "io.sigpioe"
                 version = project.version
-                artifactId = jbsdiff
+                artifactId = "jbsdiff"
                 project {
                     name project.archivesBaseName
                     packaging 'jar'
