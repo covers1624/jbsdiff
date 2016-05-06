@@ -5,9 +5,17 @@ buildscript {
 }
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 version = "1.0"
 group= "io.sigpipe.jbsdiff"
+
+String buildNo = "unknown"
+if(System.getenv("BUILD_NUMBER") != null){
+	buildNo = System.getenv("BUILD_NUMBER")
+	version = version + "-${buildNo}"
+}
 
 repositories {
     jcenter()
@@ -39,6 +47,21 @@ idea {
 
     }
 }
-
-
-
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///var/www/maven")
+            pom {
+                groupId = "io.sigpioe"
+                version = project.version
+                artifactId = jbsdiff
+                project {
+                    name project.archivesBaseName
+                    packaging 'jar'
+                    description 'JBSDiff'
+                    url 'https://github.com/covers1624/jbsdiff'
+                }
+            }
+        }
+    }
+}
