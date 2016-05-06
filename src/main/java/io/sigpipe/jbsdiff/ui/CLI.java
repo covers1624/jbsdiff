@@ -25,8 +25,6 @@ software, even if advised of the possibility of such damage.
 
 package io.sigpipe.jbsdiff.ui;
 
-import java.io.File;
-
 /**
  * Provides a simple command line interface for the io.sigpipe.jbsdiff tools.
  *
@@ -34,7 +32,7 @@ import java.io.File;
  */
 public class CLI {
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
         if (args.length < 4) {
             System.out.println("Not enough parameters!");
             printUsage();
@@ -83,5 +81,5 @@ public class CLI {
 
         System.out.println(usage);
         System.exit(1);
-    }
+    }*/
 }

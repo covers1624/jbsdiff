@@ -38,7 +38,7 @@ public interface DiffSettings {
      * @return String containing a compression algorithm name to be used by the
      * Commons Compress CompressorStreamFactory.
      */
-    public String getCompression();
+    String getCompression();
 
     /**
      * Defines the suffix sorting algorithm to be used during Diff creation.
@@ -46,5 +46,5 @@ public interface DiffSettings {
      * @param input input array
      * @return Sorted array of indices
      */
-    public int[] sort(byte[] input);
+    int[] sort(byte[] input);
 }

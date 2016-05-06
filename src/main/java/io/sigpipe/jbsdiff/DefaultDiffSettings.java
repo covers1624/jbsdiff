@@ -26,7 +26,6 @@ software, even if advised of the possibility of such damage.
 package io.sigpipe.jbsdiff;
 
 import io.sigpipe.jbsdiff.sort.SuffixSort;
-
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
 /**

@@ -35,11 +35,11 @@ public class SuffixSort {
         int[] buckets = new int[256];
         int i, h, len;
 
-        for (i=0; i < data.length; i++) {
+        for (i = 0; i < data.length; i++) {
             buckets[data[i] & 0xFF]++;
         }
 
-        for(i = 1; i < 256; i++) {
+        for (i = 1; i < 256; i++) {
             buckets[i] += buckets[i - 1];
         }
 
@@ -77,7 +77,7 @@ public class SuffixSort {
                     i -= I[i];
                 } else {
                     if (len != 0) {
-                        I[i - len] =- len;
+                        I[i - len] = -len;
                     }
 
                     len = V[I[i]] + 1 - i;
@@ -86,12 +86,12 @@ public class SuffixSort {
                     len = 0;
                 }
             }
-            if(len != 0) {
-                I[i - len] =- len;
+            if (len != 0) {
+                I[i - len] = -len;
             }
         }
 
-        for(i = 0; i < data.length + 1; i++) {
+        for (i = 0; i < data.length + 1; i++) {
             I[V[i]] = i;
         }
     }
@@ -106,8 +106,8 @@ public class SuffixSort {
 
                 for (i = 1; k + i < start + len; i++) {
                     if (V[I[k + i] + h] < x) {
-                        x=V[I[k + i] + h];
-                        j=0;
+                        x = V[I[k + i] + h];
+                        j = 0;
                     }
                     if (V[I[k + i] + h] == x) {
                         tmp = I[k + j];
@@ -117,10 +117,10 @@ public class SuffixSort {
                     }
                 }
                 for (i = 0; i < j; i++) {
-                    V[I[k + i]] = k + j -1;
+                    V[I[k + i]] = k + j - 1;
                 }
                 if (j == 1) {
-                    I[k]= -1;
+                    I[k] = -1;
                 }
             }
             return;
@@ -134,7 +134,7 @@ public class SuffixSort {
                 jj++;
             }
 
-            if(V[I[i] + h] == x) {
+            if (V[I[i] + h] == x) {
                 kk++;
             }
         }
@@ -164,7 +164,7 @@ public class SuffixSort {
             if (V[I[jj + j] + h] == x) {
                 j++;
             } else {
-                tmp=I[jj + j];
+                tmp = I[jj + j];
                 I[jj + j] = I[kk + k];
                 I[kk + k] = tmp;
                 k++;
@@ -180,7 +180,7 @@ public class SuffixSort {
         }
 
         if (jj == kk - 1) {
-            I[jj]= -1;
+            I[jj] = -1;
         }
 
         if (start + len > kk) {
@@ -192,15 +192,13 @@ public class SuffixSort {
      * Starting from the beginning of two arrays, determines the amount of bytes
      * that are equal up until the first inequality.
      *
-     * @param bytesA the first array to compare
+     * @param bytesA  the first array to compare
      * @param offsetA index in the first array to start comparing at
-     * @param bytesB the second array to compare
+     * @param bytesB  the second array to compare
      * @param offsetB index in the second array to start comparing at
-     *
      * @return the number of matching array entries
      */
-    private static int matchLength(byte[] bytesA, int offsetA,
-            byte[] bytesB, int offsetB) {
+    private static int matchLength(byte[] bytesA, int offsetA, byte[] bytesB, int offsetB) {
 
         int oldLimit = bytesA.length - offsetA;
         int newLimit = bytesB.length - offsetB;
@@ -215,10 +213,7 @@ public class SuffixSort {
         return i;
     }
 
-    public static SearchResult search(int[] I,
-            byte[] oldBytes, int oldOffset,
-            byte[] newBytes, int newOffset,
-            int start, int end) {
+    public static SearchResult search(int[] I, byte[] oldBytes, int oldOffset, byte[] newBytes, int newOffset, int start, int end) {
 
         /* Are we done dividing the search space? */
         if (end - start < 2) {
@@ -226,7 +221,7 @@ public class SuffixSort {
             x = matchLength(oldBytes, I[start], newBytes, newOffset);
             y = matchLength(oldBytes, I[end], newBytes, newOffset);
 
-            if(x > y) {
+            if (x > y) {
                 return new SearchResult(x, I[start]);
             } else {
                 return new SearchResult(y, I[end]);
@@ -247,20 +242,18 @@ public class SuffixSort {
      * greater than 0 indicates the first byte that does not match is greater in
      * the first array, whereas a value less than zero indicates the byte is
      * greater in the second array.
-     *
+     * <p/>
      * Note that the output of this implementation probably does not exactly
      * match the output of memcmp() on all platforms, but satisfies the memcmp()
      * contract.
      *
-     * @param bytesA first array
+     * @param bytesA  first array
      * @param offsetA index in the first array to start comparing at
-     * @param bytesB second array
+     * @param bytesB  second array
      * @param offsetB index in the second array to start comparing at
-     *
      * @return int indicating the relationship between the two arrays.
      */
-    private static int compareBytes(byte[] bytesA, int offsetA,
-            byte[] bytesB, int offsetB) {
+    private static int compareBytes(byte[] bytesA, int offsetA, byte[] bytesB, int offsetB) {
 
         /* Only compare up until the end of the smallest array */
         int length = Math.min(bytesA.length - offsetA, bytesB.length - offsetB);

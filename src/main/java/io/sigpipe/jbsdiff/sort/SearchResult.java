@@ -33,10 +33,14 @@ package io.sigpipe.jbsdiff.sort;
  */
 public class SearchResult {
 
-    /** Number of matched bytes */
+    /**
+     * Number of matched bytes
+     */
     private int length;
 
-    /** Position of the result in the suffix array */
+    /**
+     * Position of the result in the suffix array
+     */
     private int position;
 
     public SearchResult(int length, int position) {
@@ -46,7 +50,7 @@ public class SearchResult {
 
     @Override
     public String toString() {
-        return new String("length = " + length + ", position = " + position);
+        return "length = " + length + ", position = " + position;
     }
 
     public int getLength() {

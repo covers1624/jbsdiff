@@ -49,9 +49,8 @@ class Offset {
      * {@link InputStream}.
      *
      * @param in The InputStream to read a bsdiff offset from
-     *
      * @throws IOException when there are not enough bytes in the
-     *     {@link InputStream} or an overflow occurs.
+     *                     {@link InputStream} or an overflow occurs.
      */
     public static int readOffset(InputStream in) throws IOException {
         byte[] buf = new byte[OFFSET_SIZE];
@@ -79,8 +78,7 @@ class Offset {
 
         /* An integer overflow occurred */
         if (y < 0) {
-            throw new IOException(
-                    "Integer overflow: 64-bit offsets not supported.");
+            throw new IOException("Integer overflow: 64-bit offsets not supported.");
         }
 
         if ((buf[7] & 0x80) != 0) {
@@ -94,11 +92,9 @@ class Offset {
      * Writes a bsdiff-encoded offset to an {@link OutputStream}.
      *
      * @param value Integer value to encode and write.
-     *
      * @throws IOException if an I/O error occurs.
      */
-    public static void writeOffset(int value, OutputStream out)
-            throws IOException {
+    public static void writeOffset(int value, OutputStream out) throws IOException {
         byte[] buf = new byte[OFFSET_SIZE];
         int y = 0;
 

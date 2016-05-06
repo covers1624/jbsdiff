@@ -27,13 +27,12 @@ package io.sigpipe.jbsdiff;
 
 import io.sigpipe.jbsdiff.sort.SearchResult;
 import io.sigpipe.jbsdiff.sort.SuffixSort;
+import org.apache.commons.compress.compressors.CompressorException;
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.apache.commons.compress.compressors.CompressorException;
-import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
 /**
  * This class provides functionality for generating bsdiff patches from two
@@ -50,19 +49,17 @@ public class Diff {
      * be applied to the old file to create the new file.  Uses the default
      * bzip2 compression algorithm.
      *
-     * @param oldBytes    The original ('old') state of the file/binary.
-     * @param newBytes    New state of the file/binary that will be compared
-     *                        to create a patch file
-     * @param out         An {@link OutputStream} to write the patch file to
-     *
-     * @throws CompressorException when a compression error occurs.
+     * @param oldBytes The original ('old') state of the file/binary.
+     * @param newBytes New state of the file/binary that will be compared
+     *                 to create a patch file
+     * @param out      An {@link OutputStream} to write the patch file to
+     * @throws CompressorException    when a compression error occurs.
      * @throws InvalidHeaderException when the bsdiff header is malformed or not
-     *     present.
-     * @throws IOException when an error occurs writing the bsdiff control
-     *     blocks.
+     *                                present.
+     * @throws IOException            when an error occurs writing the bsdiff control
+     *                                blocks.
      */
-    public static void diff(byte[] oldBytes, byte[] newBytes, OutputStream out)
-            throws CompressorException, InvalidHeaderException, IOException {
+    public static void diff(byte[] oldBytes, byte[] newBytes, OutputStream out) throws CompressorException, InvalidHeaderException, IOException {
         diff(oldBytes, newBytes, out, new DefaultDiffSettings());
     }
 
@@ -70,31 +67,27 @@ public class Diff {
      * Using two different versions of a file, generate a bsdiff patch that can
      * be applied to the old file to create the new file.
      *
-     * @param oldBytes    The original ('old') state of the file/binary.
-     * @param newBytes    New state of the file/binary that will be compared
-     *                        to create a patch file
-     * @param out         An {@link OutputStream} to write the patch file to
-     * @param settings    A {@link DiffSettings} implementation, which defines
-     *                        the compression and suffix sort algorithms to
-     *                        create the patch with.
-     *
-     * @throws CompressorException when a compression error occurs.
+     * @param oldBytes The original ('old') state of the file/binary.
+     * @param newBytes New state of the file/binary that will be compared
+     *                 to create a patch file
+     * @param out      An {@link OutputStream} to write the patch file to
+     * @param settings A {@link DiffSettings} implementation, which defines
+     *                 the compression and suffix sort algorithms to
+     *                 create the patch with.
+     * @throws CompressorException    when a compression error occurs.
      * @throws InvalidHeaderException when the bsdiff header is malformed or not
-     *     present.
-     * @throws IOException when an error occurs writing the bsdiff control
-     *     blocks.
+     *                                present.
+     * @throws IOException            when an error occurs writing the bsdiff control
+     *                                blocks.
      */
-    public static void diff(byte[] oldBytes, byte[] newBytes, OutputStream out,
-                            DiffSettings settings)
-            throws CompressorException, InvalidHeaderException, IOException {
+    public static void diff(byte[] oldBytes, byte[] newBytes, OutputStream out, DiffSettings settings) throws CompressorException, InvalidHeaderException, IOException {
         CompressorStreamFactory compressor = new CompressorStreamFactory();
         String compression = settings.getCompression();
 
         int[] I = settings.sort(oldBytes);
 
         ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-        OutputStream patchOut =
-                compressor.createCompressorOutputStream(compression, byteOut);
+        OutputStream patchOut = compressor.createCompressorOutputStream(compression, byteOut);
 
         SearchResult result = null;
         int scan = 0, len = 0, position = 0;
@@ -111,34 +104,30 @@ public class Diff {
             oldScore = 0;
 
             for (scsc = scan += len; scan < newBytes.length; scan++) {
-                result = SuffixSort.search(I,
-                        oldBytes, 0,
-                        newBytes, scan,
-                        0, oldBytes.length);
+                result = SuffixSort.search(I, oldBytes, 0, newBytes, scan, 0, oldBytes.length);
                 len = result.getLength();
                 position = result.getPosition();
 
                 for (; scsc < scan + len; scsc++) {
-                    if ((scsc + lastOffset < oldBytes.length) &&
-                            (oldBytes[scsc + lastOffset] == newBytes[scsc]))
+                    if ((scsc + lastOffset < oldBytes.length) && (oldBytes[scsc + lastOffset] == newBytes[scsc])) {
                         oldScore++;
+                    }
                 }
 
                 if (((len == oldScore) && (len != 0)) || (len > oldScore + 8)) {
                     break;
                 }
 
-                if ((scan + lastOffset < oldBytes.length) &&
-                        (oldBytes[scan + lastOffset] == newBytes[scan]))
+                if ((scan + lastOffset < oldBytes.length) && (oldBytes[scan + lastOffset] == newBytes[scan])) {
                     oldScore--;
+                }
             }
 
             if ((len != oldScore) || (scan == newBytes.length)) {
                 s = 0;
                 Sf = 0;
                 lenf = 0;
-                for (int i = 0; (lastScan + i < scan) &&
-                        (lastPos + i < oldBytes.length); ) {
+                for (int i = 0; (lastScan + i < scan) && (lastPos + i < oldBytes.length); ) {
                     if (oldBytes[lastPos + i] == newBytes[lastScan + i]) {
                         s++;
                     }
@@ -154,10 +143,8 @@ public class Diff {
                 if (scan < newBytes.length) {
                     s = 0;
                     Sb = 0;
-                    for (int i = 1; (scan >= lastScan + i) &&
-                            (position >= i); i++) {
-                        if (oldBytes[position - i] ==
-                                newBytes[scan - i]) {
+                    for (int i = 1; (scan >= lastScan + i) && (position >= i); i++) {
+                        if (oldBytes[position - i] == newBytes[scan - i]) {
                             s++;
                         }
                         if (s * 2 - i > Sb * 2 - lenb) {
@@ -173,12 +160,10 @@ public class Diff {
                     Ss = 0;
                     lens = 0;
                     for (int i = 0; i < overlap; i++) {
-                        if (newBytes[lastScan + lenf - overlap + i] ==
-                                oldBytes[lastPos + lenf - overlap + i]) {
+                        if (newBytes[lastScan + lenf - overlap + i] == oldBytes[lastPos + lenf - overlap + i]) {
                             s++;
                         }
-                        if (newBytes[scan - lenb + i] ==
-                                oldBytes[position - lenb + i]) {
+                        if (newBytes[scan - lenb + i] == oldBytes[position - lenb + i]) {
                             s--;
                         }
                         if (s > Ss) {
@@ -191,8 +176,7 @@ public class Diff {
                 }
 
                 for (int i = 0; i < lenf; i++) {
-                    db[dblen + i] |= (newBytes[lastScan + i] -
-                            oldBytes[lastPos + i]);
+                    db[dblen + i] |= (newBytes[lastScan + i] - oldBytes[lastPos + i]);
                 }
 
                 for (int i = 0; i < (scan - lenb) - (lastScan + lenf); i++) {
@@ -205,8 +189,7 @@ public class Diff {
                 ControlBlock control = new ControlBlock();
                 control.setDiffLength(lenf);
                 control.setExtraLength((scan - lenb) - (lastScan + lenf));
-                control.setSeekLength((position - lenb) -
-                        (lastPos + lenf));
+                control.setSeekLength((position - lenb) - (lastPos + lenf));
                 control.write(patchOut);
 
                 lastScan = scan - lenb;
@@ -221,14 +204,12 @@ public class Diff {
         Header header = new Header();
         header.setControlLength(byteOut.size());
 
-        patchOut =
-                compressor.createCompressorOutputStream(compression, byteOut);
+        patchOut = compressor.createCompressorOutputStream(compression, byteOut);
         patchOut.write(db);
         patchOut.close();
         header.setDiffLength(byteOut.size() - header.getControlLength());
 
-        patchOut =
-                compressor.createCompressorOutputStream(compression, byteOut);
+        patchOut = compressor.createCompressorOutputStream(compression, byteOut);
         patchOut.write(eb);
         patchOut.close();
 

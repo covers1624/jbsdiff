@@ -82,8 +82,7 @@ class Header {
         verify();
     }
 
-    public Header(int controlLength, int diffLength, int outLength)
-            throws InvalidHeaderException {
+    public Header(int controlLength, int diffLength, int outLength) throws InvalidHeaderException {
         this.controlLength = controlLength;
         this.diffLength = diffLength;
         this.outLength = outLength;
@@ -106,8 +105,7 @@ class Header {
      */
     private void verify() throws InvalidHeaderException {
         if (controlLength < 0) {
-            throw new InvalidHeaderException("control block length",
-                    controlLength);
+            throw new InvalidHeaderException("control block length", controlLength);
         }
 
         if (diffLength < 0) {

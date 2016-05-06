@@ -1,4 +1,3 @@
-
 /**
  * Provides UI functionality for the org.jbsdiff library.
  */

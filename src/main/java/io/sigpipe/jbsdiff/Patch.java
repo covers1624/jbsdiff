@@ -28,15 +28,7 @@ package io.sigpipe.jbsdiff;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * This class provides functionality for using an old file and a patch to
@@ -50,17 +42,15 @@ public class Patch {
      * Using an old file and its accompanying patch, this method generates a new
      * (updated) file and writes it to an {@link OutputStream}.
      *
-     * @param old    the original ('old') state of the binary
-     * @param patch  a binary patch file to apply to the old state
-     * @param out    an {@link OutputStream} to write the patched binary to
-     *
-     * @throws CompressorException when a compression error occurs.
+     * @param old   the original ('old') state of the binary
+     * @param patch a binary patch file to apply to the old state
+     * @param out   an {@link OutputStream} to write the patched binary to
+     * @throws CompressorException    when a compression error occurs.
      * @throws InvalidHeaderException when the bsdiff header is malformed or not
-     *     present.
-     * @throws IOException when an I/O error occurs
+     *                                present.
+     * @throws IOException            when an I/O error occurs
      */
-    public static void patch(byte[] old, byte[] patch, OutputStream out)
-            throws CompressorException, InvalidHeaderException, IOException {
+    public static void patch(byte[] old, byte[] patch, OutputStream out) throws CompressorException, InvalidHeaderException, IOException {
         /* Read bsdiff header */
         InputStream headerIn = new ByteArrayInputStream(patch);
         Header header = new Header(headerIn);
@@ -121,8 +111,7 @@ public class Patch {
         }
     }
 
-    public static void patch(File oldFile, File newFile, File patchFile)
-            throws CompressorException, InvalidHeaderException, IOException {
+    public static void patch(File oldFile, File newFile, File patchFile) throws CompressorException, InvalidHeaderException, IOException {
         /* Read bsdiff header */
         InputStream headerIn = new FileInputStream(patchFile);
         Header header = new Header(headerIn);
@@ -204,11 +193,9 @@ public class Patch {
      * @param dest byte array to read data into
      * @param off  offset in dest to write data at
      * @param len  length of the read
-     *
      * @throws IOException when fewer bytes were read than requested
      */
-    private static void read(InputStream in, byte[] dest, int off, int len)
-            throws IOException {
+    private static void read(InputStream in, byte[] dest, int off, int len) throws IOException {
         if (len == 0) {
             /* We don't need to do anything */
             return;

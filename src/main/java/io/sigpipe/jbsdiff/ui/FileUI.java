@@ -25,20 +25,14 @@ software, even if advised of the possibility of such damage.
 
 package io.sigpipe.jbsdiff.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
+import io.sigpipe.jbsdiff.*;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
-import io.sigpipe.jbsdiff.DefaultDiffSettings;
-import io.sigpipe.jbsdiff.Diff;
-import io.sigpipe.jbsdiff.DiffSettings;
-import io.sigpipe.jbsdiff.InvalidHeaderException;
-import io.sigpipe.jbsdiff.Patch;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Provides an interface for working with bsdiff files on disk.
@@ -47,16 +41,11 @@ import io.sigpipe.jbsdiff.Patch;
  */
 public class FileUI {
 
-    public static void diff(File oldFile, File newFile, File patchFile)
-    throws CompressorException, FileNotFoundException, InvalidHeaderException,
-            IOException {
+    public static void diff(File oldFile, File newFile, File patchFile) throws CompressorException, InvalidHeaderException, IOException {
         diff(oldFile, newFile, patchFile, CompressorStreamFactory.BZIP2);
     }
 
-    public static void diff(File oldFile, File newFile, File patchFile,
-                            String compression)
-    throws CompressorException, FileNotFoundException, InvalidHeaderException,
-            IOException {
+    public static void diff(File oldFile, File newFile, File patchFile, String compression) throws CompressorException, InvalidHeaderException, IOException {
         FileInputStream oldIn = new FileInputStream(oldFile);
         byte[] oldBytes = new byte[(int) oldFile.length()];
         oldIn.read(oldBytes);
@@ -73,9 +62,7 @@ public class FileUI {
         out.close();
     }
 
-    public static void patch(File oldFile, File newFile, File patchFile)
-    throws CompressorException, FileNotFoundException, InvalidHeaderException,
-            IOException {
+    public static void patch(File oldFile, File newFile, File patchFile) throws CompressorException, InvalidHeaderException, IOException {
         Patch.patch(oldFile, newFile, patchFile);
     }
 }
