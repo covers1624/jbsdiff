@@ -25,6 +25,7 @@ software, even if advised of the possibility of such damage.
 
 package io.sigpipe.jbsdiff;
 
+import io.sigpipe.jbsdiff.callback.IIncrementCallBack;
 import io.sigpipe.jbsdiff.sort.SearchResult;
 import io.sigpipe.jbsdiff.sort.SuffixSort;
 import org.apache.commons.compress.compressors.CompressorException;
@@ -60,7 +61,11 @@ public class Diff {
      *                                blocks.
      */
     public static void diff(byte[] oldBytes, byte[] newBytes, OutputStream out) throws CompressorException, InvalidHeaderException, IOException {
-        diff(oldBytes, newBytes, out, new DefaultDiffSettings());
+        diff(oldBytes, newBytes, out, new DefaultDiffSettings(), null);
+    }
+
+    public static void diff(byte[] oldBytes, byte[] newBytes, OutputStream out, IIncrementCallBack callBack) throws CompressorException, InvalidHeaderException, IOException {
+        diff(oldBytes, newBytes, out, new DefaultDiffSettings(), callBack);
     }
 
     /**
@@ -80,7 +85,7 @@ public class Diff {
      * @throws IOException            when an error occurs writing the bsdiff control
      *                                blocks.
      */
-    public static void diff(byte[] oldBytes, byte[] newBytes, OutputStream out, DiffSettings settings) throws CompressorException, InvalidHeaderException, IOException {
+    public static void diff(byte[] oldBytes, byte[] newBytes, OutputStream out, DiffSettings settings, IIncrementCallBack callBack) throws CompressorException, InvalidHeaderException, IOException {
         CompressorStreamFactory compressor = new CompressorStreamFactory();
         String compression = settings.getCompression();
 
@@ -101,6 +106,7 @@ public class Diff {
         int dblen = 0, eblen = 0;
 
         while (scan < newBytes.length) {
+            handleCallBack(callBack, scan, newBytes.length);
             oldScore = 0;
 
             for (scsc = scan += len; scan < newBytes.length; scan++) {
@@ -217,5 +223,11 @@ public class Diff {
 
         header.write(out);
         out.write(byteOut.toByteArray());
+    }
+
+    private static void handleCallBack(IIncrementCallBack callBack, int index, int totalSize) {
+        if (callBack != null) {
+            callBack.callBack(index, totalSize);
+        }
     }
 }
